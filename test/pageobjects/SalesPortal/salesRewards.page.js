@@ -1,9 +1,8 @@
 import Page from './page'
-import { urls, pageIds, creditScore } from '../../resources/literals';
+import { pageIds, ratedRewards } from '../../resources/literals';
 import { helper } from '../../utils/helper';
 import { config } from '../../../wdio.conf';
 
-const { REWARDS } = urls.short
 const { SALES_PORTAL_REWARDS } = pageIds;
 
 class SalesRewards extends Page {
@@ -12,55 +11,51 @@ class SalesRewards extends Page {
         super(SALES_PORTAL_REWARDS);
     }
 
-    open() {
-        super.open(REWARDS);
-    }
+    ///////////////////////////////////////////////////////////////////// SELECTORS //////////////////////////////////////////////////////////////
 
     /* Credit score section */
-    get creditScoreInput()   { return $('div[aria-label*="button"] button') }
-    get creditScoreOptions() { return $$('li[role="menuitem"] div div:nth-child(1) p') }
-    get exceptionalOption()  { return $$('li[role="menuitem"]')[0] }
-    get veryGoodOption()     { return $$('li[role="menuitem"]')[1] }
-    get goodOption()         { return $$('li[role="menuitem"]')[2] }
-    get fairOption()         { return $$('li[role="menuitem"]')[3] }
-    get poorOption()         { return $$('li[role="menuitem"]')[4] }
+    get creditScoreSlider()      { return $('span[role="slider"]') }
 
+    /*Rated Rewards*/
+    get burglarAlarmRwd()        { return $(`p=${ratedRewards.BURGLAR_ALARM}`)}
+    get fireProtectionRwd()      { return $(`p=${ratedRewards.FIRE_PROTECTION}`)}
+    get tanklessWaterHeaterRwd() { return $(`p=${ratedRewards.TANKLESS_WATER_HEATER}`)}
+    get waterDetectionRwd()      { return $(`p=${ratedRewards.WATER_DETECTION_SHUTOFF}`)}
+    get accreditedBuilderRwd()   { return $(`p=${ratedRewards.ACCREDITED_BUILDER}`)}
+    get ageOverSixtyRwd()        { return $(`p=${ratedRewards.OVER_AGE_60}`)}
+    get securedCommunityRwd()    { return $(`p=${ratedRewards.SECURED_COMMUNITY}`)}
+    get surgeProtectionRwd()     { return $(`p=${ratedRewards.SURGE_PROTECTION}`)}
+    get nonSmokerRwd()           { return $(`p=${ratedRewards.NON_SMOKER}`)}
+    get hurricaneRwd()           { return $(`p=${ratedRewards.OPENING_PROTECTION}`)}
 
-    async openCreditScoreDropdown() {
-        await helper.waitForDisplayedAndClick(await this.creditScoreInput,config.timeout.L);
+    /* Quote Container */
+    get rewardsAmount()          { return $('#quote-container div:nth-of-type(2) div:nth-of-type(2) div:nth-of-type(3) p')} 
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    async selectCreditScore(creditScore) {
+        await (await this.creditScoreSlider).dragAndDrop({x:creditScore});
     }
 
-    async mapCreditScore(){
-        let arr = [];
-        await Promise.all((await this.creditScoreOptions).map(async (credit) => {
-            arr.push(await credit.getText());
-        }))
-        return arr;
-    }
-
-    async selectCreditScore(credit) {
-        let selectedCreditScore;
-        switch(credit) {
-            case creditScore.EXCEPTIONAL: 
-                selectedCreditScore = await this.exceptionalOption;
-                break;
-            case creditScore.VERY_GOOD: 
-                selectedCreditScore = await this.veryGoodOption;
-                break;
-            case creditScore.GOOD:
-                selectedCreditScore = await this.goodOption;
-                break;
-            case creditScore.FAIR:
-                selectedCreditScore = await this.fairOption;
-                break;
-            case creditScore.POOR:
-                selectedCreditScore = await this.poorOption;
-                break;
-            default:
-                throw new Error(`${credit} is not a valid Credit Score value`);
+    /**
+     * @param {WebElement,WebElement[]} rewards: a single or an array of 
+     * rewards to select during the sales journey 
+     */
+    async selectRewards(rewards) {
+        if(Array.isArray(rewards)) {
+            await Promise.all((rewards).map(async (reward) => {
+                await helper.waitForDisplayedAndClick(reward,config.timeout.L);
+            }))
+        } else {
+            await helper.waitForDisplayedAndClick(rewards);
         }
-        await helper.waitForEnabledAndClick(await selectedCreditScore);
+    }
+
+    async getRewardsAmount() {
+        return await helper.getItemText(await this.rewardsAmount);
     }
 }
+
+
 
 module.exports = new SalesRewards();

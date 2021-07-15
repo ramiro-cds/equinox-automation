@@ -20,5 +20,8 @@
     "chai": "^4.3.4",
     "chromedriver": "^91.0.1",
     "wdio-chromedriver-service": "^7.1.1"
+  },
+  "dependencies": {
+    "chai-as-promised": "^7.1.1"
   }
 }

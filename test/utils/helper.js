@@ -16,13 +16,29 @@ const waitForDisplayedAndSetValue = async (element,value,timeout = config.timeou
     await (await element).setValue(value);
 };
 
-const waitForEnabledAndClick = async (element,timeout = config.timeout.M, reverse = false) => {
+const waitForEnabledAndClick = async (element,timeout = config.timeout.L, reverse = false) => {
     await (await element).waitForEnabled({timeout,reverse});
     await (await element).click();
+}
+
+const getItemText = async (element) => {
+    await (await element).waitForDisplayed({timeout: config.timeout.L});
+    const text = await (await element).getText();
+    return text;
+}
+
+const getElementsText = async (elements) => {
+    let arr = [];
+    await Promise.all((await elements).map(async (element) => {
+        arr.push(await element.getText());
+    }))
+    return arr;
 }
 
 export const helper = {
     waitForDisplayedAndClick,
     waitForDisplayedAndSetValue,
     waitForEnabledAndClick,
+    getItemText,
+    getElementsText
 }

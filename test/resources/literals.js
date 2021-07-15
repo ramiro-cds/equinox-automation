@@ -14,6 +14,20 @@ export const creditScore = {
     POOR: 'Poor'
 }
 
+export const ratedRewards = {
+    BURGLAR_ALARM: 'Burglar Alarm',
+    FIRE_PROTECTION: 'Fire Protection',
+    TANKLESS_WATER_HEATER: 'Tankless Water Heater',
+    WATER_DETECTION_SHUTOFF: 'Water Detection & Shutoff',
+    ACCREDITED_BUILDER: 'Accredited Builder',
+    OVER_AGE_60: 'Age 60 and Over',
+    SECURED_COMMUNITY: 'Secured Community',
+    SURGE_PROTECTION: 'Surge Protection',
+    NON_SMOKER: 'Non-Smoker',
+    OPENING_PROTECTION: 'Hurricane Windows/Shutters',
+    MILITARY: 'Military (First Responder)'
+}
+
 export const creditScoreArr = [ 'Exceptional', 'Very Good', 'Fair', 'Poor', 'Good' ]
 
 export const urls = {
