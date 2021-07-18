@@ -15,10 +15,6 @@ describe('Rewards Page Tests', () => {
 
         it('should display all options for credit score', async () => {
             await SalesHome.completeAddressAndContinue(addresses.GREEN_PATH_ADDRESS);
-            await SalesRewards.openCreditScoreDropdown();
-            
-            const creditScore = await SalesRewards.mapCreditScore();
-            chaiExpect(creditScore).to.have.members(creditScoreArr);
         })
 
         it('should select desired credit score', async () => {
