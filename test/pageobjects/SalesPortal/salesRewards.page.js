@@ -15,6 +15,7 @@ class SalesRewards extends Page {
 
     /* Credit score section */
     get creditScoreSlider()      { return $('span[role="slider"]') }
+    get creditScoreValue()       { return $('.MuiSlider-valueLabel span span')}
 
     /*Rated Rewards*/
     get burglarAlarmRwd()        { return $(`p=${ratedRewards.BURGLAR_ALARM}`)}
@@ -30,11 +31,23 @@ class SalesRewards extends Page {
 
     /* Quote Container */
     get rewardsAmount()          { return $('#quote-container div:nth-of-type(2) div:nth-of-type(2) div:nth-of-type(3) p')} 
+    get quoteValue()             { return $('h3 span:first-child') }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     async selectCreditScore(creditScore) {
-        await (await this.creditScoreSlider).dragAndDrop({x:creditScore});
+        await (await this.creditScoreSlider).waitForDisplayed({timeout:config.timeout.L});
+        await (await this.creditScoreSlider).dragAndDrop({x:creditScore,y:0});
+    }
+
+    async getQuoteThousand() {
+        let value = await helper.getItemText(await this.quoteValue,config.timeout.XL);
+        value = helper.americanDollarToInt(value);
+        return value;
+    }
+
+    async getCreditScore() {
+        return parseInt(await helper.getItemText(await this.creditScoreValue,config.timeout.XL));
     }
 
     /**

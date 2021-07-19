@@ -18,8 +18,13 @@ const expectTextToEqCaseIgnore = async (actual,expected) => {
     chaiExpect(await actual.toLowerCase()).to.equal(expected.toLowerCase());
 }
 
+const greaterThan = async (bigger,smaller) => {
+    chaiExpect(parseInt(bigger)).to.be.greaterThan(parseInt(smaller));
+}
+
 export const expect = {
     expectUrlToEqual,
     expectTextToEq,
-    expectTextToEqCaseIgnore
+    expectTextToEqCaseIgnore,
+    greaterThan
 }

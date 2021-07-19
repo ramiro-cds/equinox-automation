@@ -21,8 +21,13 @@ const waitForEnabledAndClick = async (element,timeout = config.timeout.L, revers
     await (await element).click();
 }
 
-const getItemText = async (element) => {
-    await (await element).waitForDisplayed({timeout: config.timeout.L});
+const waitForValueToChange = async (element,timeout = config.timeout.L) => {
+    const initVal = await (await element).getValue();
+    await (await element).waitUntil((await element).getText() != initVal,{timeout});
+}
+
+const getItemText = async (element,timeout = config.timeout.L) => {
+    await (await element).waitForDisplayed({timeout});
     const text = await (await element).getText();
     return text;
 }
@@ -35,10 +40,19 @@ const getElementsText = async (elements) => {
     return arr;
 }
 
+const americanDollarToInt = async (value) => {
+    [value] = value.split('.');
+    value = (value.split('$'))[1];
+    const [thousands,hundreds] = value.split(',');
+    return (thousands + hundreds);
+}
+
 export const helper = {
     waitForDisplayedAndClick,
     waitForDisplayedAndSetValue,
     waitForEnabledAndClick,
     getItemText,
-    getElementsText
+    getElementsText,
+    americanDollarToInt,
+    waitForValueToChange
 }

@@ -6,14 +6,6 @@ export const addresses = {
     RED_PATH_ADDRESS: '6615 Falling Leaves Ct, Mason, OH 45040'
 }
 
-export const creditScore = {
-    EXCEPTIONAL: 'Exceptional',
-    VERY_GOOD: 'Very good',
-    GOOD: 'Good',
-    FAIR: 'Fair',
-    POOR: 'Poor'
-}
-
 export const ratedRewards = {
     BURGLAR_ALARM: 'Burglar Alarm',
     FIRE_PROTECTION: 'Fire Protection',
@@ -28,7 +20,19 @@ export const ratedRewards = {
     MILITARY: 'Military (First Responder)'
 }
 
-export const creditScoreArr = [ 'Exceptional', 'Very Good', 'Fair', 'Poor', 'Good' ]
+export const creditScore = {
+    WORST: -500,
+    POOR: -455,
+    FAIR: -230,
+    GOOD: -100,
+    VERY_GOOD: -70,
+    EXCELLENT: 70,
+    EXCEPTIONAL: 230
+}
+ export const creditScoreLimits = {
+    LOWEST: 580, 
+    HIGHEST: 800
+ }
 
 export const urls = {
     short: {
