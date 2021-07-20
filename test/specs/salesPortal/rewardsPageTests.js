@@ -31,15 +31,26 @@ describe('Rewards Page Tests', () => {
             await customExpect.expectTextToEq(selectedCreditScore,creditScoreLimits.LOWEST)
         })
 
-        it.only('should decrease quote when a higher credit score is selected', async () => {
+        it('should decrease quote when a higher credit score is selected', async () => {
             await SalesHome.completeAddressAndContinue(addresses.GREEN_PATH_ADDRESS);
 
             const firstQuote = await SalesRewards.getQuoteThousand();
             await SalesRewards.selectCreditScore(creditScore.EXCEPTIONAL);
-            await helper.waitForValueToChange(await SalesRewards.quoteValue);
+            await helper.waitForValueToChange(SalesRewards.quoteValue);
             const quoteAfterChange = await SalesRewards.getQuoteThousand();
 
             await customExpect.greaterThan(firstQuote,quoteAfterChange);
+        })
+
+        it('should increase quote when a lower credit score is selected', async () => {
+            await SalesHome.completeAddressAndContinue(addresses.GREEN_PATH_ADDRESS);
+
+            const firstQuote = await SalesRewards.getQuoteThousand();
+            await SalesRewards.selectCreditScore(creditScore.WORST);
+            await helper.waitForValueToChange(SalesRewards.quoteValue);
+            const quoteAfterChange = await SalesRewards.getQuoteThousand();
+
+            await customExpect.greaterThan(quoteAfterChange,firstQuote);
         })
     })
 

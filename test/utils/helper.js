@@ -22,8 +22,12 @@ const waitForEnabledAndClick = async (element,timeout = config.timeout.L, revers
 }
 
 const waitForValueToChange = async (element,timeout = config.timeout.L) => {
-    const initVal = await (await element).getValue();
-    await (await element).waitUntil((await element).getText() != initVal,{timeout});
+    let current = await (await element).getText();
+    await (await element).waitUntil(async() => {
+        const initial = current;
+        current = await (await element).getText();
+        return (current != initial)
+    },{timeout,interval:500});
 }
 
 const getItemText = async (element,timeout = config.timeout.L) => {
