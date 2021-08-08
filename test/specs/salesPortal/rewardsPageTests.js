@@ -1,9 +1,15 @@
 import SalesHome from '../../pageobjects/SalesPortal/salesHome.page';
 import SalesRewards from '../../pageobjects/SalesPortal/salesRewards.page';
-import { addresses, creditScore, creditScoreLimits } from '../../resources/literals';
+import { addresses, creditScore, creditScoreLimits, ratedRewards } from '../../resources/literals';
 import { expect as customExpect, expect } from '../../utils/assertions';
 import { helper } from '../../utils/helper';
 
+const {
+    BURGLAR_ALARM,
+    FIRE_PROTECTION,
+    TANKLESS_WATER_HEATER,
+    WATER_DETECTION_SHUTOFF
+} = ratedRewards;
 
 describe('Rewards Page Tests', () => {
     
@@ -56,8 +62,8 @@ describe('Rewards Page Tests', () => {
 
     describe('Rated Rewards Tests', () => {
 
-        it('should select rewards and display the right amount', async () => {
-            const rewards = await [SalesRewards.ageOverSixtyRwd, SalesRewards.burglarAlarmRwd, SalesRewards.nonSmokerRwd, SalesRewards.accreditedBuilderRwd],
+        it.only('should select rewards and display the right amount', async () => {
+            const rewards = await [BURGLAR_ALARM,TANKLESS_WATER_HEATER],
             rewardsSize = rewards.length;
 
             await SalesHome.completeAddressAndContinue(addresses.GREEN_PATH_ADDRESS);

@@ -23,4 +23,5 @@ export default class Page {
     async waitForSpinner(timeout = config.timeout.XL) {
         await Spinner.waitForSpinner({timeout});
     }
+
 }

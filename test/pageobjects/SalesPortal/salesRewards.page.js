@@ -5,6 +5,14 @@ import { config } from '../../../wdio.conf';
 
 const { SALES_PORTAL_REWARDS } = pageIds;
 
+const {
+    BURGLAR_ALARM,
+    FIRE_PROTECTION,
+    MILITARY,
+    WATER_DETECTION_SHUTOFF,
+    TANKLESS_WATER_HEATER
+} = ratedRewards;
+
 class SalesRewards extends Page {
 
     constructor() {
@@ -33,7 +41,7 @@ class SalesRewards extends Page {
     get rewardsAmount()          { return $('#quote-container div:nth-of-type(2) div:nth-of-type(2) div:nth-of-type(3) p')} 
     get quoteValue()             { return $('h3 span:first-child') }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     async selectCreditScore(creditScore) {
         await (await this.creditScoreSlider).waitForDisplayed({timeout:config.timeout.L});
@@ -50,18 +58,56 @@ class SalesRewards extends Page {
         return parseInt(await helper.getItemText(await this.creditScoreValue,config.timeout.XL));
     }
 
+    async mapper(elements) {
+        let mappedElements;
+        if(Array.isArray(elements)){
+            mappedElements = [];
+            await Promise.all((elements).map(async (element) => {
+                mappedElements.push(await this.elementSwitcher(element));
+                })
+            )
+        } else {
+            mappedElements = await this.elementSwitcher(elements);
+        }
+        return mappedElements;
+    }
+
     /**
      * @param {WebElement,WebElement[]} rewards: a single or an array of 
      * rewards to select during the sales journey 
      */
     async selectRewards(rewards) {
-        if(Array.isArray(rewards)) {
-            await Promise.all((rewards).map(async (reward) => {
-                await helper.waitForDisplayedAndClick(reward,config.timeout.L);
+
+        const mappedRewards = await this.mapper(rewards);
+
+        if(Array.isArray(mappedRewards)) {
+            await Promise.all((mappedRewards).map(async (reward) => {
+                await helper.waitForDisplayedAndClick(await reward,config.timeout.L);
             }))
         } else {
-            await helper.waitForDisplayedAndClick(rewards);
+            await helper.waitForDisplayedAndClick(await  mappedRewards);
         }
+    }
+
+    async elementSwitcher (elementName) {
+        let element;
+        switch(elementName) {
+            case BURGLAR_ALARM:
+                element = await this.burglarAlarmRwd;
+                break;
+            case FIRE_PROTECTION:
+                element = await this.fireProtectionRwd;
+                break;
+            case WATER_DETECTION_SHUTOFF:
+                element = await this.waterDetectionRwd;
+                break;
+            case TANKLESS_WATER_HEATER:
+                element = await this.tanklessWaterHeaterRwd;
+                break;
+            default:
+                throw new Error(`${elementName} is not a valid element to look for`);
+        }
+        return element;
     }
 
     async getRewardsAmount() {
